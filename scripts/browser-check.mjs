@@ -1,0 +1,56 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import http from 'node:http';
+import path from 'node:path';
+const root = path.resolve('site/out');
+const server = http.createServer((req,res) => {
+  let file = path.join(root, decodeURIComponent(req.url.split('?')[0]));
+  if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file,'index.html');
+  if (!fs.existsSync(file)) { res.writeHead(404); res.end(); return; }
+  const mime = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.txt':'text/plain','.woff2':'font/woff2'};
+  res.setHeader('Content-Type',mime[path.extname(file)] || 'application/octet-stream');
+  fs.createReadStream(file).pipe(res);
+});
+await new Promise(r=>server.listen(4322,r));
+const browser = await chromium.launch();
+try {
+  const context = await browser.newContext({ permissions:['clipboard-read','clipboard-write'], acceptDownloads:true });
+  const page = await context.newPage();
+  const errors=[];
+  page.on('pageerror',e=>errors.push(String(e)));
+  await page.goto('http://localhost:4322/gallery/');
+  await page.getByRole('button',{name:/Printer.*Open$/}).click();
+  await page.waitForURL('**/gallery/printer/**');
+  await page.getByRole('radio',{name:'Anatomy',exact:true}).click();
+  await page.waitForFunction(()=>location.search.includes('style=anatomy'));
+  assert.equal(await page.locator('.preview-art svg').getAttribute('data-style'),'anatomy');
+  await page.getByRole('radio',{name:'Left',exact:true}).click();
+  await page.getByRole('radio',{name:'Lying',exact:true}).click();
+  await page.getByRole('button',{name:'Copy SVG',exact:true}).click();
+  const clip=await page.evaluate(()=>navigator.clipboard.readText());
+  assert.match(clip,/<svg/); assert.match(clip,/data-style="anatomy"/);
+  const dl=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Download PNG at 2x',exact:true}).click();
+  const download=await dl;
+  assert.match(download.suggestedFilename(),/@2x\.png$/);
+  await download.saveAs('captures/export-2x.png');
+  const png=fs.readFileSync('captures/export-2x.png');
+  assert.equal(png.readUInt32BE(16),192);
+  const shared=page.url();
+  await page.reload();
+  await page.waitForFunction(()=>document.querySelector('.preview-art svg')?.getAttribute('data-style')==='anatomy');
+  assert.equal(page.url(),shared);
+  await page.getByRole('searchbox').fill('rocket');
+  await page.waitForTimeout(150);
+  assert.equal(await page.locator('.tile').count(),1);
+  await page.getByRole('searchbox').fill('');
+  await page.getByRole('button',{name:'Switch to dark theme'}).click();
+  await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark');
+  await page.setViewportSize({width:390,height:844});
+  console.log(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,12).map(e=>e.className)})));
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth));
+  await page.screenshot({path:'captures/mobile-gallery.png',fullPage:true});
+  assert.deepEqual(errors,[]);
+  console.log('PASS: navigation, style, facing, pose, clipboard, PNG dimensions, share/reload, search, theme, mobile overflow; no JS errors');
+} finally { await browser.close(); server.close(); }

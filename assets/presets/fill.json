@@ -1,0 +1,97 @@
+{
+  "name": "fill",
+  "id": "fill",
+  "label": "Fill",
+  "blurb": "Solid shaded silhouettes in ink tones, with details cut out in the face colour.",
+  "plinth": "never",
+  "presets": {
+    "light": {
+      "bg": "#ffffff",
+      "ink": "#1f1f22",
+      "face": "#fdfcf9",
+      "plinth": "#c7d7c3",
+      "accent": "#ef6c4d"
+    },
+    "dark": {
+      "bg": "#161616",
+      "ink": "#e8e6e0",
+      "face": "#2b2b2b",
+      "plinth": "#3d4c3e",
+      "accent": "#ef6c4d"
+    }
+  },
+  "solid": {
+    "body": [
+      "ink~bg:0.3",
+      "ink~bg:0.15",
+      "ink"
+    ],
+    "face": [
+      "ink~bg:0.48",
+      "ink~bg:0.38",
+      "ink~bg:0.28"
+    ],
+    "detail": [
+      "ink~bg:0.62",
+      "ink~bg:0.54",
+      "ink~bg:0.45"
+    ],
+    "ink": [
+      "ink",
+      "ink",
+      "ink"
+    ],
+    "accent": [
+      "accent<0.2",
+      "accent",
+      "accent>0.14"
+    ],
+    "plinth": [
+      "ink~bg:0.8",
+      "ink~bg:0.7",
+      "ink~bg:0.6"
+    ],
+    "ruler": [
+      "ink~bg:0.5",
+      "ink~bg:0.45",
+      "ink~bg:0.4"
+    ],
+    "glass": [
+      "ink~bg:0.7",
+      "ink~bg:0.6",
+      "ink~bg:0.5"
+    ]
+  },
+  "decal": {
+    "body": [
+      "face",
+      "face>0.06",
+      "face>0.12"
+    ],
+    "face": [
+      "face",
+      "face>0.06",
+      "face>0.12"
+    ],
+    "detail": [
+      "face>0.08",
+      "face>0.12",
+      "face>0.18"
+    ],
+    "soft": [
+      "face",
+      "face>0.06",
+      "face>0.12"
+    ],
+    "ink": [
+      "ink",
+      "ink",
+      "ink"
+    ]
+  },
+  "line": "ink",
+  "soft": "face>0.08",
+  "decalLine": "ink",
+  "glassOpacity": 0.6,
+  "outline": true
+}

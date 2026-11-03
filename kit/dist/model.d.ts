@@ -1,0 +1,180 @@
+/**
+ * model.ts: the drawing model. A drawing is data: parts in world units, each
+ * with a role. Styles turn roles into colours at render time, so one model
+ * renders in every style, facing and pose.
+ */
+import type { Axis, Vec3 } from './math.js';
+/** What a part *is* in the picture. Styles colour roles, never parts. */
+export type Role = 'body' | 'face' | 'detail' | 'ink' | 'accent' | 'plinth' | 'ruler' | 'glass';
+/** Fill used by a decal. `bg` paints the background colour. */
+export type Paint = Role | 'bg' | 'soft';
+export type FaceName = 'top' | 'bottom' | 'front' | 'back' | 'left' | 'right';
+export type Shape = 
+/** Axis-aligned box from `at` (min corner) of `size` [w, h, d]; `r` rounds corners around `axis`. */
+{
+    kind: 'box';
+    at: Vec3;
+    size: Vec3;
+    r?: number;
+    axis?: Axis;
+    seg?: number;
+}
+/** Cylinder (or frustum/cone with r2) standing on `at` and extending `h` along `axis`. */
+ | {
+    kind: 'cyl';
+    at: Vec3;
+    r: number;
+    h: number;
+    r2?: number;
+    axis?: Axis;
+    n?: number;
+}
+/** A 2D profile extruded `len` along `axis`, starting at `at`. Profile coords: y-axis (x,z), x-axis (z,y), z-axis (x,y). */
+ | {
+    kind: 'prism';
+    at: Vec3;
+    profile: [number, number][];
+    len: number;
+    axis?: Axis;
+}
+/** Sphere centred at `at`. */
+ | {
+    kind: 'sphere';
+    at: Vec3;
+    r: number;
+};
+/** Static rotation about an axis-parallel line through `pivot`. */
+export interface Rot {
+    axis: Axis;
+    deg: number;
+    pivot: Vec3;
+}
+/**
+ * Flat marks drawn in the plane of a face. Coordinates are world units in the
+ * face frame: (0, 0) is the face's top-left corner as seen by the viewer,
+ * x runs to the right, y runs down (on the top face, y runs toward the front).
+ */
+export type Decal = {
+    t: 'rect';
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    r?: number;
+    fill?: Paint;
+    stroke?: boolean | 'soft';
+    opacity?: number;
+} | {
+    t: 'circle';
+    cx: number;
+    cy: number;
+    r: number;
+    fill?: Paint;
+    stroke?: boolean | 'soft';
+    opacity?: number;
+} | {
+    t: 'line';
+    pts: [number, number][];
+    stroke?: true | 'soft' | Paint;
+    closed?: boolean;
+    fill?: Paint;
+    width?: number;
+}
+/** Many separate segments [x1, y1, x2, y2] in one path: ticks, grilles, grids. */
+ | {
+    t: 'segs';
+    segs: [number, number, number, number][];
+    stroke?: true | 'soft' | Paint;
+    width?: number;
+}
+/** A rounded bar: the stand-in for a line of text or a UI control. */
+ | {
+    t: 'bar';
+    x: number;
+    y: number;
+    w: number;
+    h?: number;
+    fill?: Paint;
+}
+/** One tiny engraved label at most per drawing. */
+ | {
+    t: 'text';
+    x: number;
+    y: number;
+    size: number;
+    text: string;
+    anchor?: 'start' | 'middle' | 'end';
+    fill?: Paint;
+};
+export interface Part {
+    id?: string;
+    shape: Shape;
+    role?: Role;
+    decals?: Partial<Record<FaceName, Decal[]>>;
+    /** Static rotations, applied in order before motion and pose. */
+    rot?: Rot[];
+    /** Motion group this part moves with. */
+    group?: string;
+    /** Depth tie-break for enclosing shapes; positive draws later. */
+    bias?: number;
+    /** Excluded from pose rotation (e.g. a drawn floor). */
+    fixed?: boolean;
+    /** Only drawn in this pose (stands and feet that make no sense once the object lies down). */
+    only?: 'standing' | 'lying';
+}
+export type Ease = 'linear' | 'inOut' | 'out' | 'in' | 'back';
+/** One moving group. Values are reached at `to` and held, within a 0..1 phase. */
+export interface Track {
+    group: string;
+    /** Translation reached at full extent. */
+    t?: Vec3;
+    /** Rotation reached at full extent. */
+    r?: Rot;
+    /** Scale reached at full extent, about a pivot (axis-aligned parts only: bars that grow). */
+    s?: {
+        k: Vec3;
+        pivot: Vec3;
+    };
+    /** Window inside the half cycle (yoyo) or full cycle (loop). Default 0..1. */
+    from?: number;
+    to?: number;
+    ease?: Ease;
+    /** yoyo: out and back (default). loop: 0 to 1 then wrap (spins, conveyors). */
+    mode?: 'yoyo' | 'loop';
+}
+export interface Motion {
+    /** Seconds for one full cycle. */
+    duration: number;
+    tracks: Track[];
+    /** A short description for the hover hint, e.g. "paper feeds out". */
+    label?: string;
+}
+export type CategoryId = 'shapes' | 'data' | 'code' | 'ai' | 'files' | 'interface' | 'charts' | 'commerce' | 'logistics' | 'industry' | 'communication' | 'media' | 'time' | 'status' | 'arrows' | 'people' | 'health';
+export interface Drawing {
+    id: string;
+    name: string;
+    category: CategoryId;
+    tags: string[];
+    /** icon = 1x1 tile; scene = 2x2 tile, drawn on a plinth in Anatomy. */
+    kind: 'icon' | 'scene';
+    /** The /isometric prompt that "made" it. */
+    prompt: string;
+    /** Accessible description. */
+    description: string;
+    /** ISO date, for Newest sorting. */
+    createdAt: string;
+    /** The authored pose. Default 'standing'. */
+    pose?: 'standing' | 'lying';
+    plinth?: {
+        margin?: number;
+        w?: number;
+        d?: number;
+    };
+    parts: Part[];
+    motion?: Motion;
+}
+export interface Category {
+    id: CategoryId;
+    label: string;
+}
+export declare const CATEGORIES: Category[];

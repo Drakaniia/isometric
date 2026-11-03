@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" role="img" aria-labelledby="t d">
+  <title id="t">Texture pattern snippets</title>
+  <desc id="d">Reusable SVG pattern definitions: brushed metal, carbon weave, dot grid and hazard stripes. Copy a pattern into defs and overlay it on a face at low opacity.</desc>
+  <defs>
+    <pattern id="brushed" width="4" height="2" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="none"/><path d="M0 .5H4" stroke="#fff" stroke-opacity=".18" stroke-width=".4"/><path d="M0 1.4H4" stroke="#000" stroke-opacity=".08" stroke-width=".3"/></pattern>
+    <pattern id="carbon" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#1b1d22"/><path d="M0 0h3v3H0zM3 3h3v3H3z" fill="#2c2f36"/></pattern>
+    <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".8" fill="#fff" fill-opacity=".35"/></pattern>
+    <pattern id="hazard" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#facc15"/><rect width="4" height="8" fill="#1b1d22"/></pattern>
+  </defs>
+  <rect x="2" y="2" width="34" height="36" fill="#9aa3b5"/><rect x="2" y="2" width="34" height="36" fill="url(#brushed)"/>
+  <rect x="42" y="2" width="34" height="36" fill="url(#carbon)"/>
+  <rect x="82" y="2" width="34" height="36" fill="#6d4aff"/><rect x="82" y="2" width="34" height="36" fill="url(#dots)"/>
+  <rect x="122" y="2" width="34" height="36" fill="url(#hazard)"/>
+</svg>

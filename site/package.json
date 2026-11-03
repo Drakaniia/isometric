@@ -1,0 +1,24 @@
+{
+  "name": "isometric-site",
+  "version": "2.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "kit": "node ../node_modules/typescript/bin/tsc -p ../kit/tsconfig.json",
+    "dev": "npm run kit && next dev",
+    "build": "npm run kit && next build && node scripts/flatten-rsc.mjs out",
+    "typecheck": "npm run kit && tsc --noEmit",
+    "start": "npx serve out"
+  },
+  "dependencies": {
+    "next": "16.4.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5.9.3"
+  }
+}

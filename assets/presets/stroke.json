@@ -1,0 +1,76 @@
+{
+  "name": "stroke",
+  "id": "stroke",
+  "label": "Stroke",
+  "blurb": "Ink outlines only. Faces take the background colour, so hidden lines stay hidden.",
+  "plinth": "never",
+  "presets": {
+    "light": {
+      "bg": "#ffffff",
+      "ink": "#1f1f22",
+      "face": "#ffffff",
+      "plinth": "#c7d7c3",
+      "accent": "#ef6c4d"
+    },
+    "dark": {
+      "bg": "#161616",
+      "ink": "#e8e6e0",
+      "face": "#161616",
+      "plinth": "#3d4c3e",
+      "accent": "#ef6c4d"
+    }
+  },
+  "solid": {
+    "body": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "face": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "detail": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "ink": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "accent": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "plinth": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "ruler": [
+      "bg",
+      "bg",
+      "bg"
+    ],
+    "glass": [
+      "bg",
+      "bg",
+      "bg"
+    ]
+  },
+  "decal": {
+    "ink": [
+      "ink",
+      "ink",
+      "ink"
+    ]
+  },
+  "line": "ink",
+  "soft": "ink~bg:0.45",
+  "glassOpacity": 0,
+  "outline": true
+}

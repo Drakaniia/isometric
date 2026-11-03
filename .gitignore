@@ -1,0 +1,14 @@
+node_modules/
+captures/
+compare/
+*.log
+.DS_Store
+.env
+*out/
+.next/
+*.tsbuildinfo
+site/.export-check/
+site/download-server.mjs
+site/public/isometric.zip
+.env.*
+!.env.example

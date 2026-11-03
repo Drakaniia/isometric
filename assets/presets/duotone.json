@@ -1,0 +1,69 @@
+{
+  "name": "duotone",
+  "id": "duotone",
+  "label": "Duotone",
+  "blurb": "Two tones of one hue. Outlines are a deep tint of the fill rather than pure ink.",
+  "plinth": "never",
+  "presets": {
+    "light": {
+      "bg": "#ffffff",
+      "ink": "#1f1f22",
+      "face": "#fdfcf9",
+      "plinth": "#c7d7c3",
+      "accent": "#5b7cfa"
+    },
+    "dark": {
+      "bg": "#161616",
+      "ink": "#e8e6e0",
+      "face": "#2b2b2b",
+      "plinth": "#3d4c3e",
+      "accent": "#6f8cff"
+    }
+  },
+  "solid": {
+    "body": [
+      "accent~bg:0.86",
+      "accent~bg:0.78",
+      "accent~bg:0.68"
+    ],
+    "face": [
+      "accent~bg:0.72",
+      "accent~bg:0.64",
+      "accent~bg:0.54"
+    ],
+    "detail": [
+      "accent~bg:0.56",
+      "accent~bg:0.48",
+      "accent~bg:0.38"
+    ],
+    "ink": [
+      "accent~ink:0.42",
+      "accent~ink:0.5",
+      "accent~ink:0.58"
+    ],
+    "accent": [
+      "accent<0.14",
+      "accent",
+      "accent>0.12"
+    ],
+    "plinth": [
+      "accent~bg:0.9",
+      "accent~bg:0.84",
+      "accent~bg:0.76"
+    ],
+    "ruler": [
+      "accent~bg:0.5",
+      "accent~bg:0.45",
+      "accent~bg:0.4"
+    ],
+    "glass": [
+      "accent~bg:0.9",
+      "accent~bg:0.86",
+      "accent~bg:0.8"
+    ]
+  },
+  "line": "accent~ink:0.58",
+  "soft": "accent~bg:0.35",
+  "glassOpacity": 0.55,
+  "outline": true
+}

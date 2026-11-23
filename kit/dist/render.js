@@ -166,20 +166,14 @@ export function depthSort(solids) {
             if (A.sb[2] <= B.sb[0] + 0.01 || B.sb[2] <= A.sb[0] + 0.01 || A.sb[3] <= B.sb[1] + 0.01 || B.sb[3] <= A.sb[1] + 0.01)
                 continue;
             const a = A.b, b = B.b;
-            let rel = 0;
-            if (a.max[0] <= b.min[0] + E)
-                rel = -1;
-            else if (b.max[0] <= a.min[0] + E)
-                rel = 1;
-            else if (a.max[2] <= b.min[2] + E)
-                rel = -1;
-            else if (b.max[2] <= a.min[2] + E)
-                rel = 1;
-            else if (a.max[1] <= b.min[1] + E)
-                rel = -1;
-            else if (b.max[1] <= a.min[1] + E)
-                rel = 1;
-            else {
+            // Separation along each axis: -1 when A lies on the far side, 1 when B does.
+            const sep = [0, 2, 1].map((k) => (a.max[k] <= b.min[k] + E ? -1 : b.max[k] <= a.min[k] + E ? 1 : 0));
+            // Separated one way along one axis and the other way along another: the
+            // view ray (1,1,1) cannot pass through both, so they never overlap on screen.
+            if (sep.includes(-1) && sep.includes(1))
+                continue;
+            let rel = sep.find((v) => v !== 0) ?? 0;
+            if (!rel) {
                 overlaps++;
                 rel = A.c <= B.c ? -1 : 1;
             }

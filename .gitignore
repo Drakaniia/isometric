@@ -12,3 +12,4 @@ site/download-server.mjs
 site/public/isometric.zip
 .env.*
 !.env.example
+.vercel
